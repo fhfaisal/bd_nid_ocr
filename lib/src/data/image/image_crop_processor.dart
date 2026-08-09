@@ -8,17 +8,11 @@ import 'package:path_provider/path_provider.dart';
 /// Center-crops an image to a target viewport aspect ratio, baking in EXIF
 /// orientation first.
 ///
-/// Ported as-is from Microzen's `ImageProcessor` (see
-/// `docs/ARCHITECTURE.md` §6) — same aspect-ratio/crop math, same EXIF
-/// handling, same JPEG quality-90 re-encode, same temp-file naming.
-///
-/// Preserves the existing behavior of returning `null` when the image can't
-/// be decoded, rather than throwing — callers (see [NidOcr.cropToViewport])
-/// use that to silently fall back to the original image, exactly as
-/// Microzen's `ScanNIDUseCase.cropToViewport` does today. This is flagged in
-/// `docs/ARCHITECTURE.md` §11/§15.5 as closer to a latent bug than an
-/// intentional design, but it is preserved unchanged per the
-/// preserve-existing-behavior constraint — not silently "fixed" here.
+/// Returns `null` when the image can't be decoded, rather than throwing —
+/// callers (see [NidOcr.cropToViewport]) use that to silently fall back to
+/// the original image. This behavior is closer to a latent bug than an
+/// intentional design (see "Known limitations" in the README), but it's
+/// preserved deliberately rather than silently "fixed" here.
 class ImageCropProcessor {
   Future<File?> cropImage(
     File image,

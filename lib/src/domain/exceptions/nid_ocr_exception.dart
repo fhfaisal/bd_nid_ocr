@@ -1,10 +1,9 @@
 /// Base type for all errors thrown by `bd_nid_ocr`.
 ///
-/// The package never wraps errors in `Either`/`Failure` (that was Microzen's
-/// app-wide choice, not part of the OCR logic — see `docs/ARCHITECTURE.md`
-/// §11/§13). It throws a small, purpose-built exception hierarchy instead,
-/// so the package has zero dependency on `dartz` or any consumer's error
-/// model.
+/// The package throws a small, purpose-built exception hierarchy rather
+/// than wrapping errors in a `Result`/`Either` type, so it has zero
+/// dependency on any functional-error-handling package or the consumer's
+/// own error model.
 sealed class NidOcrException implements Exception {
   final String message;
 
@@ -31,10 +30,10 @@ class BarcodeScanException extends NidOcrException {
 }
 
 /// Unexpected failure while normalizing OCR text or extracting fields
-/// (regex/MRZ parsing). Not observed in the reference implementation —
-/// `NidScanParser` does not throw for missing fields, it returns nulls — so
-/// this exists only for genuinely unexpected internal errors, not routine
-/// "field not found" cases (see `docs/ARCHITECTURE.md` §9).
+/// (regex/MRZ parsing). Not expected in normal operation — [NidScanParser]
+/// does not throw for missing fields, it returns nulls — so this exists
+/// only for genuinely unexpected internal errors, not routine "field not
+/// found" cases.
 class NidParsingException extends NidOcrException {
   const NidParsingException(super.message, {super.cause});
 }

@@ -1,8 +1,7 @@
 /// Unparsed OCR/barcode output for a front+back NID scan pair.
 ///
-/// Exposed publicly (unlike Microzen's internal-only `RawNidScanEntity`) so
-/// consumers debugging misreads can inspect exactly what ML Kit returned
-/// before the parser normalized/extracted it — see `docs/ARCHITECTURE.md` §9.
+/// Exposed publicly so consumers debugging misreads can inspect exactly
+/// what ML Kit returned before the parser normalized/extracted it.
 class RawNidScan {
   /// Combined OCR text from the front image (Devanagari-script result,
   /// then Latin-script result, newline-joined — see [NidOcr.scan]).

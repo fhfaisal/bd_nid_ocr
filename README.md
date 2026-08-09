@@ -5,7 +5,8 @@ ML Kit text/barcode recognition, and regex/MRZ-based structured field
 extraction — as a plain-Dart/Flutter API with **zero dependency on any
 state-management framework** (no GetX, Riverpod, Bloc, or Provider).
 
-Extracted from Microzen's `scan_nid` module — a port, not a rewrite.
+Extracted from an existing production NID-scanning module — a port, not a
+rewrite.
 
 ## What this package owns
 
@@ -19,11 +20,11 @@ Extracted from Microzen's `scan_nid` module — a port, not a rewrite.
 
 ## What this package does NOT own
 
-Camera UI, navigation, state management, persistence, session/auth, and
-Microzen (or any other consuming app) — all of that stays entirely in your
-app. This package has no default capture screen; you supply front/back
-images however you like (your own camera UI, `image_picker`, etc.) and hand
-them to `NidOcr` as `File`s.
+Camera UI, navigation, state management, persistence, session/auth, and the
+consuming app itself — all of that stays entirely in your app. This package
+has no default capture screen; you supply front/back images however you
+like (your own camera UI, `image_picker`, etc.) and hand them to `NidOcr` as
+`File`s.
 
 This is Bangladesh-NID-specific by design — Bengali/Devanagari OCR, the MRZ
 `I<BGD` anchor, and the {10, 13, 17}-digit NID length whitelist are baked
@@ -62,9 +63,8 @@ try {
 }
 ```
 
-Cropping a freshly-captured image to a viewport (mirrors the original
-Microzen flow of cropping immediately after each capture, before both
-images exist):
+Cropping a freshly-captured image to a viewport (crop each image
+immediately after capture, before both front/back images exist):
 
 ```dart
 final cropped = await nidOcr.cropToViewport(
@@ -75,9 +75,9 @@ final cropped = await nidOcr.cropToViewport(
 ```
 
 `cropToViewport` never throws — on any failure (decode error, I/O error,
-etc.) it silently returns the original image unchanged. This preserves
-Microzen's existing behavior exactly, and is flagged as a candidate future
-improvement rather than something to change silently.
+etc.) it silently returns the original image unchanged. This is a known
+limitation (see below), not an intentional design — flagged as a candidate
+future improvement rather than something to change silently.
 
 If you already have raw OCR text (e.g. from your own pipeline, or a saved
 fixture) and want structured fields without images or ML Kit at all, use
@@ -205,7 +205,7 @@ dependencies {
 }
 ```
 
-*(Confirmed required in Microzen's own `build.gradle.kts`. Not independently
+*(Confirmed required against a real production build. Not independently
 re-verified against the current `google_mlkit_text_recognition` plugin's
 internal Android module structure. Treat as "known to work," not
 "verified minimal.")*

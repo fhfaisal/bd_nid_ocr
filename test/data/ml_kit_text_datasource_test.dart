@@ -1,11 +1,9 @@
-// Ported from microzen/test/app/modules/MIS/scan_nid/data/datasources/
-// ml_kit_datasource_test.dart — same platform-channel mocking strategy,
-// retargeted at the package's MLKitTextDataSource. See
-// docs/ARCHITECTURE.md §14: the original test mocks at the plugin-channel
-// level (not the datasource itself), so this genuinely exercises
-// MLKitTextDataSource's call sequencing under `flutter test`, no
-// device/emulator needed — it is not a pure-Dart unit test, but it doesn't
-// need to be an integration test either.
+// Same platform-channel mocking strategy as the original source
+// implementation, retargeted at the package's MLKitTextDataSource. Mocks
+// at the plugin-channel level (not the datasource itself), so this
+// genuinely exercises MLKitTextDataSource's call sequencing under
+// `flutter test`, no device/emulator needed — it is not a pure-Dart unit
+// test, but it doesn't need to be an integration test either.
 
 import 'dart:io';
 

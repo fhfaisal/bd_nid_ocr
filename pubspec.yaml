@@ -15,10 +15,10 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # google_mlkit_* plugins used by Microzen's scan_nid module. Bumped from
-  # the originally-carried-over ^0.15.1/^0.14.2 to the latest stable minors
-  # for pub.dev's up-to-date-dependencies check — re-verify OCR/barcode
-  # behavior against these versions before relying on this in production.
+  # Bumped from the originally-carried-over ^0.15.1/^0.14.2 to the latest
+  # stable minors for pub.dev's up-to-date-dependencies check — re-verify
+  # OCR/barcode behavior against these versions before relying on this in
+  # production.
   google_mlkit_text_recognition: ^0.16.0
   google_mlkit_barcode_scanning: ^0.15.0
   image: ^4.8.0

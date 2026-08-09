@@ -10,11 +10,10 @@ import 'domain/nid_scan_parser.dart';
 
 /// Framework-independent Bangladesh NID OCR facade.
 ///
-/// This is the package's entire public entry point (see
-/// `docs/ARCHITECTURE.md` §9/§10): a plain class with `Future`-returning
-/// methods, no `Rx`/`ChangeNotifier`/state-management dependency of any
-/// kind, and no navigation or UI. The consumer wraps calls to it in
-/// whatever state management (or none) they use.
+/// This is the package's entire public entry point: a plain class with
+/// `Future`-returning methods, no `Rx`/`ChangeNotifier`/state-management
+/// dependency of any kind, and no navigation or UI. The consumer wraps
+/// calls to it in whatever state management (or none) they use.
 ///
 /// ```dart
 /// final nidOcr = NidOcr();
@@ -22,14 +21,12 @@ import 'domain/nid_scan_parser.dart';
 /// await nidOcr.dispose(); // must be called — releases ML Kit recognizers
 /// ```
 ///
-/// Orchestration mirrors Microzen's `NIDScanRepositoryImpl.extractNidText` +
-/// `ScanNIDUseCase.scanNid`/`cropToViewport` exactly (see
-/// `docs/ARCHITECTURE.md` §5/§6): front-OCR, back-OCR, and barcode-scan run
-/// concurrently via `Future.wait`; text recognition of each image is
-/// sequential internally (see [MLKitTextDataSource]). `dartz`/`Either` are
-/// replaced by [NidOcrException] thrown from `scan`; `cropToViewport`
-/// preserves the original's silent fallback-to-original-image behavior on
-/// any failure (see `docs/ARCHITECTURE.md` §11/§15.5) rather than throwing.
+/// Front-OCR, back-OCR, and barcode-scan run concurrently via
+/// `Future.wait`; text recognition of each image is sequential internally
+/// (see [MLKitTextDataSource]). Failures surface as a thrown
+/// [NidOcrException] rather than a `Result`/`Either` wrapper; `cropToViewport`
+/// is the one exception — it falls back to the original image on any
+/// failure rather than throwing (see below).
 class NidOcr {
   final MLKitTextDataSource _dataSource;
   final ImageCropProcessor _imageProcessor;
@@ -48,10 +45,9 @@ class NidOcr {
   /// Runs OCR + barcode scanning on [frontImage]/[backImage] and parses the
   /// result into structured NID fields.
   ///
-  /// Mirrors `ScanNIDUseCase.scanNid`. Front-OCR, back-OCR, and barcode-scan
-  /// run concurrently; if any of the three fails, this throws a
-  /// [TextRecognitionException] or [BarcodeScanException] (whichever
-  /// underlying call failed — see `docs/ARCHITECTURE.md` §5) rather than
+  /// Front-OCR, back-OCR, and barcode-scan run concurrently; if any of the
+  /// three fails, this throws a [TextRecognitionException] or
+  /// [BarcodeScanException] (whichever underlying call failed) rather than
   /// silently continuing.
   Future<NidScanResult> scan({
     required File frontImage,
@@ -63,10 +59,9 @@ class NidOcr {
     try {
       card = _parser.parse(frontText: raw.frontText, backText: raw.backText);
     } catch (e) {
-      // Not observed in the reference implementation — the parser returns
-      // null fields rather than throwing (see docs/ARCHITECTURE.md §9). This
-      // is a defensive guard against a genuinely unexpected internal error,
-      // not a routine "field not found" path.
+      // Not expected in normal operation — the parser returns null fields
+      // rather than throwing. This is a defensive guard against a genuinely
+      // unexpected internal error, not a routine "field not found" path.
       throw NidParsingException('Failed to parse NID fields', cause: e);
     }
 
@@ -82,8 +77,8 @@ class NidOcr {
   /// [NidScanParser].
   ///
   /// Exposed for consumers who want the raw OCR text (e.g. for debugging
-  /// misreads — see `docs/ARCHITECTURE.md` §9) without paying for parsing,
-  /// or who want to call [NidScanParser] separately.
+  /// misreads) without paying for parsing, or who want to call
+  /// [NidScanParser] separately.
   Future<RawNidScan> extractRaw({
     required File frontImage,
     required File backImage,
@@ -130,14 +125,11 @@ class NidOcr {
 
   /// Auto-crops [image] to the given viewport aspect ratio.
   ///
-  /// Mirrors `ScanNIDUseCase.cropToViewport` exactly, including its current
-  /// behavior of **never throwing**: any failure (decode error, I/O error,
-  /// or anything else) silently falls back to returning [image] unchanged.
-  /// This is preserved intentionally per the preserve-existing-behavior
-  /// constraint even though it makes cropping failures unobservable to the
-  /// caller — see `docs/ARCHITECTURE.md` §11/§15.5, which flags this as a
-  /// candidate for a future (separately-approved) behavior change, not
-  /// something to alter during extraction.
+  /// **Never throws**: any failure (decode error, I/O error, or anything
+  /// else) silently falls back to returning [image] unchanged. This makes
+  /// cropping failures unobservable to the caller — flagged as a candidate
+  /// for a future behavior change (see "Known limitations" in the README),
+  /// not something to rely on.
   Future<File> cropToViewport({
     required File image,
     required double viewportWidth,
@@ -158,7 +150,7 @@ class NidOcr {
   /// Releases the ML Kit recognizers/scanner held by this instance. Must be
   /// called exactly once when this [NidOcr] is no longer needed (e.g. from
   /// whatever disposal hook the consumer's framework provides — `dispose()`,
-  /// `onClose()`, `ref.onDispose()`, etc. — see `docs/ARCHITECTURE.md` §10).
+  /// `onClose()`, `ref.onDispose()`, etc.).
   Future<void> dispose() async {
     await _dataSource.close();
   }

@@ -1,6 +1,5 @@
-// Ported from microzen/test/app/modules/MIS/scan_nid/data/datasources/
-// image_processor_test.dart — same crop-math/fallback assertions, retargeted
-// at the package's ImageCropProcessor. See docs/ARCHITECTURE.md §14.
+// Same crop-math/fallback assertions as the original source implementation,
+// retargeted at the package's ImageCropProcessor.
 
 import 'dart:io';
 

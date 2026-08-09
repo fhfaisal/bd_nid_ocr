@@ -2,8 +2,8 @@
 ///
 /// `bd_nid_ocr` owns: image cropping, ML Kit text/barcode recognition,
 /// and regex/MRZ-based structured field extraction. It owns nothing about
-/// state management, navigation, persistence, or UI — see
-/// `docs/ARCHITECTURE.md` §8 for the full boundary.
+/// state management, navigation, persistence, or UI — that stays entirely
+/// in the consuming app.
 ///
 /// This file is the package's entire public surface. Internals under
 /// `src/data` (ML Kit / image-plugin wrappers) are not exported — consume

@@ -6,14 +6,11 @@ import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart
 /// Wraps the ML Kit text recognizers (Latin + Devanagari-as-Bengali) and the
 /// PDF417 barcode scanner.
 ///
-/// Ported as-is from Microzen's `MLKitDataSource` (see
-/// `docs/ARCHITECTURE.md` §6) — same recognizer configuration, same
-/// sequential-within-[recognizeText] call order and its documented reason
-/// (avoiding concurrent native ML Kit calls on the same image). This
-/// datasource itself does not run [recognizeText] and [scanBarcode]
-/// concurrently with each other — that orchestration (which *is* concurrent,
-/// via `Future.wait`) lives one layer up in [NidOcr.scan], matching the
-/// existing repository/usecase split.
+/// Text recognition within [recognizeText] runs sequentially, not
+/// concurrently, to avoid concurrent native ML Kit calls on the same image.
+/// This datasource itself does not run [recognizeText] and [scanBarcode]
+/// concurrently with each other either — that orchestration (which *is*
+/// concurrent, via `Future.wait`) lives one layer up, in [NidOcr.scan].
 class MLKitTextDataSource {
   final TextRecognizer _latinRecognizer = TextRecognizer(
     script: TextRecognitionScript.latin,

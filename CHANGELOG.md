@@ -1,7 +1,7 @@
 ## 1.0.0
 
-Initial release. Ported from Microzen's `scan_nid` module as a
-framework-agnostic package (no GetX/Riverpod/Bloc/Provider dependency).
+Initial release. Ported from an existing production NID-scanning module as
+a framework-agnostic package (no GetX/Riverpod/Bloc/Provider dependency).
 
 - `NidOcr`: `scan()` runs ML Kit text recognition (front + back) and PDF417
   barcode scanning concurrently, then parses the result into structured NID

@@ -7,7 +7,7 @@ class NidScanResult {
   final NidCard card;
 
   /// The PDF417 barcode payload decoded into a key/value map. Keys and
-  /// coverage are format-dependent (see `docs/ARCHITECTURE.md` §15.4) — the
+  /// coverage are format-dependent (see [NidScanParser.parseBarcode]) — the
   /// map is empty if no barcode was found or it could not be decoded.
   final Map<String, dynamic> barcodeData;
 

@@ -3,10 +3,6 @@
 /// Every field is nullable because OCR extraction can fail to locate a given
 /// field on a given card (poor lighting, damaged card, OCR misread, etc.) —
 /// a `null` field means "not found," not "empty on the card."
-///
-/// Field set and nullability are ported as-is from Microzen's
-/// `NIDCardEntity` (see `docs/ARCHITECTURE.md` §9) — no fields were added or
-/// removed during extraction.
 class NidCard {
   /// The NID number. Resolved from the MRZ when present, otherwise from the
   /// front-side regex extraction. Valid lengths are 10, 13, or 17 digits.

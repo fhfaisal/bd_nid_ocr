@@ -3,27 +3,22 @@ import 'models/nid_card.dart';
 /// Bangladesh-NID-specific OCR normalization, regex field extraction, MRZ
 /// parsing, and barcode decoding.
 ///
-/// Ported verbatim (algorithm-for-algorithm) from Microzen's
-/// `ScanNIDUseCase._normalize`/`_extract*`/`_parseMRZ*`/`_parseBarcodeToJson`
-/// (see `docs/ARCHITECTURE.md` §3/§6) — no regex, ordering, or extraction
-/// logic was "cleaned up" during the port. The only intentional change is
-/// removing the `dart:developer` debug `log()` calls that existed alongside
-/// the extraction (they had no effect on the returned value; the raw OCR
-/// text they logged is now available properly via [RawNidScan] instead of
-/// only being reachable through log output).
+/// The regex, ordering, and extraction logic here are intentionally
+/// unpolished in places (see the OCR-misread normalization table below) —
+/// they're tuned against real-world OCR noise, not rewritten for elegance.
 ///
 /// This parser is pure Dart — no Flutter or plugin dependency — and is
 /// entirely Bangladesh-NID-specific: Bengali/Devanagari script handling, the
 /// MRZ `I<BGD` anchor, and the {10, 13, 17}-digit NID length whitelist are
-/// all baked in by design, not configurable. See `docs/ARCHITECTURE.md`
-/// §15.8/§15.9 — multi-country support is out of scope, not an oversight.
+/// all baked in by design, not configurable. Multi-country support is out
+/// of scope for this package, not an oversight.
 class NidScanParser {
   const NidScanParser();
 
   /// Normalizes [frontText]/[backText] and extracts structured NID fields.
   ///
-  /// Mirrors `ScanNIDUseCase.execute`. Never throws for missing fields —
-  /// fields that cannot be located are simply `null` on the returned
+  /// Never throws for missing fields — fields that cannot be located are
+  /// simply `null` on the returned
   /// [NidCard]. MRZ-derived values win over front/back regex extraction for
   /// `nidNumber`, `name`, and `dateOfBirth` where both exist; `gender`,
   /// `expiryDate`, and `nationality` are MRZ-only; the rest are
@@ -72,17 +67,16 @@ class NidScanParser {
 
   /// Decodes a raw PDF417 barcode payload into a key/value map.
   ///
-  /// Mirrors `ScanNIDUseCase._parseBarcodeToJson` exactly, including the two
-  /// distinct formats it recognizes:
+  /// Recognizes two distinct formats:
   ///
   /// - An XML-tag format (`<pin>`/`<name>`/... present in [rawData]).
   /// - A control-character-delimited key-value format, using ASCII `0x1D`
   ///   (Group Separator) as the field delimiter and `0x04` (End of
   ///   Transmission) as a value-cleanup character to strip. The tag
-  ///   dictionary for this branch (NM/NW/OL/BR/PE/PR/VA/DT/PK/SG/CH) was not
-  ///   independently verified against known Bangladesh NID barcode
-  ///   conventions during the extraction audit — see `docs/ARCHITECTURE.md`
-  ///   §15.4. Ported as-is, unverified, not as confirmed BD behavior.
+  ///   dictionary for this branch (NM/NW/OL/BR/PE/PR/VA/DT/PK/SG/CH) has not
+  ///   been independently verified against official Bangladesh NID barcode
+  ///   conventions — treat as "known to work against observed cards," not
+  ///   confirmed spec behavior.
   ///
   /// Returns an empty map if [rawData] matches neither format.
   Map<String, dynamic> parseBarcode(String rawData) {

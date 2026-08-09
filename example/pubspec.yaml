@@ -43,8 +43,9 @@ dependencies:
   # Demo-only: the example needs *some* way to supply front/back card
   # images. image_picker is the simplest (gallery pick), and is a choice
   # local to this example app — the package core does not depend on it and
-  # does not require any particular image-acquisition method (see
-  # docs/ARCHITECTURE.md §7 IMPORTANT note: no camera UI in the core).
+  # does not require any particular image-acquisition method (no camera UI
+  # ships in the core package; see README.md "What this package does NOT
+  # own").
   image_picker: ^1.1.2
 
 dev_dependencies:

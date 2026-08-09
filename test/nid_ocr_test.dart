@@ -1,8 +1,7 @@
-// Ported from microzen/test/app/modules/MIS/scan_nid/data/repositories/
-// nid_scan_repository_impl_test.dart's intent — same orchestration/fallback
-// assertions, retargeted at the NidOcr facade (which replaces the
-// repository+usecase split and dartz/Either with plain Futures/exceptions,
-// see docs/ARCHITECTURE.md §6/§9/§13).
+// Same orchestration/fallback assertions as the original source
+// implementation's repository+usecase tests, retargeted at the NidOcr
+// facade (which replaces that repository+usecase split and a
+// Result/Either-based error model with plain Futures/exceptions).
 
 import 'dart:io';
 
@@ -148,8 +147,7 @@ void main() {
     );
 
     test('falls back to the original image when the processor throws '
-        '(preserves the existing silent-fallback behavior, see '
-        'docs/ARCHITECTURE.md §11/§15.5)', () async {
+        '(preserves the existing silent-fallback behavior)', () async {
       final source = File('source.jpg');
       when(
         () => mockImageProcessor.cropImage(source, 300, 240),

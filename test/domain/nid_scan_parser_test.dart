@@ -1,13 +1,11 @@
 // Parser regression tests for NidScanParser.
 //
-// The existing Microzen suite (scan_nid_usecase_test.dart) tested only
-// scanNid()'s dartz/Either orchestration and barcode decoding — it had no
-// dedicated coverage of the regex/MRZ field-extraction methods themselves
-// (see docs/ARCHITECTURE.md §14). Those two barcode-format cases are ported
-// verbatim below (see the 'barcode parsing' group); everything else here is
-// new coverage added during extraction per Phase 12 of the task brief,
-// exercising the ported _normalize/_extract*/_parseMRZ* logic directly —
-// with no behavior change from the source (see docs/ARCHITECTURE.md §6).
+// The original source implementation's test suite only covered its
+// orchestration and barcode decoding — it had no dedicated coverage of the
+// regex/MRZ field-extraction methods themselves. Two barcode-format cases
+// are ported verbatim below (see the 'barcode parsing' group); everything
+// else here is new coverage, exercising the ported _normalize/_extract*/
+// _parseMRZ* logic directly — with no behavior change from the source.
 //
 // IMPORTANT finding surfaced while writing these tests (flagged, not
 // "fixed" — see the "single-line collapse" group below): `_normalize`
@@ -16,7 +14,7 @@
 // single-element list in practice — every "look at the next line" or
 // "lines seen so far" branch in `_extractNames`/`_extractParent` is
 // unreachable dead code given how the two methods are actually composed in
-// `parse()`. This was true of the original `ScanNIDUseCase` as well (ported
+// `parse()`. This was true of the original implementation as well (ported
 // verbatim, not introduced here) — it is not something this extraction
 // changed, but it materially affects what inputs actually exercise which
 // code path, so tests below are written against the real (single-line)
@@ -316,11 +314,12 @@ void main() {
 
     test('nidNumber precedence is MRZ-first (`mrz[\'nid\'] ?? frontNid`), but '
         'name/dateOfBirth precedence is front-first (`front ?? mrz[...]`) — '
-        'the two are NOT symmetric despite docs/ARCHITECTURE.md §9 summarizing '
-        'both as "MRZ wins where both exist"; that summary is imprecise for '
-        'name/dateOfBirth specifically, per the actual field-by-field '
-        '`execute()`/`parse()` code. Flagged here, not silently corrected in '
-        'the port (the ported behavior itself is unchanged from source).', () {
+        'the two are NOT symmetric, contrary to a "MRZ wins where both exist" '
+        'summary one might assume from the class doc comment; that summary is '
+        'imprecise for name/dateOfBirth specifically, per the actual '
+        'field-by-field `parse()` code. Flagged here, not silently corrected '
+        '(the behavior itself is unchanged from the source it was ported '
+        'from).', () {
       final card = parser.parse(
         frontText: 'NID No: 999 999 9999\nName: Front Side Name',
         backText: mrzBlock,
@@ -367,7 +366,7 @@ void main() {
     test('decodes the control-character-delimited format', () {
       // 0x1D (Group Separator) delimits fields; 0x04 is stripped from
       // values. Ported as-is from the source's unverified "delimited
-      // key-value" branch — see docs/ARCHITECTURE.md §15.4.
+      // key-value" branch (see NidScanParser.parseBarcode).
       const gs = '\x1d';
       const eot = '\x04';
       final raw =
