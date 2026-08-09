@@ -3,14 +3,9 @@ description: >-
   Framework-agnostic Bangladesh NID OCR: image cropping, ML Kit text/barcode
   recognition, and regex/MRZ field extraction. No GetX/Riverpod/Bloc/Provider
   dependency.
-version: 0.0.1
+version: 1.0.0
 homepage: https://github.com/fhfaisal/bd_nid_ocr
 repository: https://github.com/fhfaisal/bd_nid_ocr
-# Not ready for pub.dev: ML Kit redistribution licensing has not been
-# independently verified yet, and LICENSE is still a placeholder. See
-# TASKLIST.md for the full pre-publish checklist — remove this line once
-# both are resolved.
-publish_to: 'none'
 
 environment:
   sdk: ^3.9.0
