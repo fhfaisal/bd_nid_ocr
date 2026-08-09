@@ -228,48 +228,6 @@ them, not because of this package.
 ## Publishing to pub.dev
 
 This package currently ships with `publish_to: 'none'` in `pubspec.yaml`.
-Before removing that line and running `dart pub publish`, work through this
-checklist:
-
-1. **Resolve the ML Kit redistribution licensing question first.** This is
-   the actual blocker, not a formality — `google_mlkit_text_recognition`
-   and `google_mlkit_barcode_scanning` wrap Google's ML Kit, and its
-   redistribution terms for a *published, third-party* Flutter package have
-   not been independently verified. Confirm this before doing anything
-   below. **No data available on this yet** — don't publish until it's
-   checked.
-2. **Pick and add a real license.** `LICENSE` currently contains a
-   placeholder (`TODO: Add your license here.`). Pub.dev's scoring and
-   `dart pub publish` both expect an OSI-approved license (MIT and
-   Apache-2.0 are the common choices for Flutter packages) as actual file
-   content, not a TODO.
-3. **Fill in `pubspec.yaml` metadata pub.dev requires/rewards:**
-   - `homepage:` and/or `repository:` — currently empty. Needs a real
-     public repo URL (push this package to GitHub/GitLab first).
-   - `version:` — bump from `0.0.1` to `1.0.0` (or whatever you consider
-     first-stable) once you're ready to publish; pub.dev treats `0.x` as
-     pre-release but it's not required.
-   - `description:` — current one is fine (60–180 chars, already is).
-4. **Write real `CHANGELOG.md` entries.** It currently just says `TODO:
-   Describe initial release.` — pub.dev penalizes placeholder changelogs.
-5. **Add dartdoc comments to public API surface** (`NidOcr`, `NidScanResult`,
-   `NidCard`, exception types, etc.) if not already fully documented —
-   this is a chunk of the pub.dev score.
-6. **Verify `example/` runs standalone** with a `git`/path dependency swapped
-   for the real pub.dev name once published — pub.dev requires a working
-   example.
-7. **Dry-run before publishing for real:**
-   ```bash
-   dart pub publish --dry-run
-   ```
-   Fix every warning it prints (missing files, oversized package, invalid
-   pubspec fields, etc.).
-8. **Check name availability** — `bd_nid_ocr` must not already be taken on
-   pub.dev; search before you're committed to the name.
-9. **Publish:**
-   ```bash
-   dart pub publish
-   ```
-   This is irreversible for that version number — once published, a
-   version cannot be unpublished except within a short grace window and
-   under pub.dev's retraction rules. Double-check everything above first.
+See [`TASKLIST.md`](TASKLIST.md) for the current pana score, what's already
+fixed, and the remaining pre-publish checklist (ML Kit licensing sign-off,
+LICENSE, and the final `dart pub publish` steps).
