@@ -224,11 +224,3 @@ them, not because of this package.
   introduced or fixed during extraction.
 - `cropToViewport` never surfaces crop failures — see above.
 - No default capture UI ships in this version — bring your own camera code.
-
-## Publishing to pub.dev
-
-Scores 160/160 on [`pana`](https://pub.dev/packages/pana) as of 2026-08-09 —
-MIT-licensed, `dart pub publish --dry-run` clean, `bd_nid_ocr` unclaimed on
-pub.dev. The only remaining step is running `dart pub publish` itself, which
-is irreversible for that version number (retraction rules apply after, no
-plain unpublish) and hasn't been run yet.
