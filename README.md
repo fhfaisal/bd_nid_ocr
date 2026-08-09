@@ -34,8 +34,13 @@ in, not configurable. No multi-country support exists or is planned for v1.
 
 ```yaml
 dependencies:
-  bd_nid_ocr:
-    path: ../bd_nid_ocr # or a git/pub.dev reference once published
+  bd_nid_ocr: ^1.0.0
+```
+
+Or:
+
+```bash
+dart pub add bd_nid_ocr
 ```
 
 ## Usage
