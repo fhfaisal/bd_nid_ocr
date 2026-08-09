@@ -227,7 +227,8 @@ them, not because of this package.
 
 ## Publishing to pub.dev
 
-This package currently ships with `publish_to: 'none'` in `pubspec.yaml`.
-See [`TASKLIST.md`](TASKLIST.md) for the current pana score, what's already
-fixed, and the remaining pre-publish checklist (ML Kit licensing sign-off,
-LICENSE, and the final `dart pub publish` steps).
+Scores 160/160 on [`pana`](https://pub.dev/packages/pana) as of 2026-08-09 —
+MIT-licensed, `dart pub publish --dry-run` clean, `bd_nid_ocr` unclaimed on
+pub.dev. The only remaining step is running `dart pub publish` itself, which
+is irreversible for that version number (retraction rules apply after, no
+plain unpublish) and hasn't been run yet.
